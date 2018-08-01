@@ -1,7 +1,7 @@
 __author__ = "Altertech Group, https://www.altertech.com/"
 __copyright__ = "Copyright (C) 2018 Altertech Group"
 __license__ = "Apache License 2.0"
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 from configparser import ConfigParser
 import requests
@@ -107,9 +107,6 @@ class RobogerClient(object):
     def _send_push(self, uri, timeout=None, **kwargs):
         _timeout = timeout if timeout else default_timeout
         data = kwargs.copy()
-        if 'media' in data and isinstance(data['media'], str):
-            _m = data['media'].encode()
-            data['media'] = base64.b64encode(_m).decode()
         try:
             self._log_debug('sending push to %s' % uri)
             r = requests.post(uri + '/push', json=data, timeout=_timeout)
