@@ -1,7 +1,7 @@
 __author__ = "Altertech Group, https://www.altertech.com/"
 __copyright__ = "Copyright (C) 2018 Altertech Group"
 __license__ = "Apache License 2.0"
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 
 from configparser import ConfigParser
 import requests
@@ -106,10 +106,9 @@ class RobogerClient(object):
 
     def _send_push(self, uri, timeout=None, **kwargs):
         _timeout = timeout if timeout else default_timeout
-        data = kwargs.copy()
         try:
             self._log_debug('sending push to %s' % uri)
-            r = requests.post(uri + '/push', json=data, timeout=_timeout)
+            r = requests.post(uri + '/push', json=kwargs, timeout=_timeout)
             if r.status_code != 200:
                 raise Exception('rpush error, code %u' % r.status_code)
         except:
