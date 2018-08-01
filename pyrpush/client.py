@@ -1,13 +1,15 @@
 __author__ = "Altertech Group, https://www.altertech.com/"
 __copyright__ = "Copyright (C) 2018 Altertech Group"
 __license__ = "Apache License 2.0"
-__version__ = "0.0.5"
+__version__ = "0.0.7"
 
 from configparser import ConfigParser
 import requests
 import base64
 import time
 import logging
+import platform
+import getpass
 
 default_timeout = 5
 default_ini_file = '/usr/local/etc/roboger_push.ini'
@@ -86,8 +88,11 @@ class RobogerClient(object):
             timeout = int(srv.get('timeout'))
         except:
             timeout = None
-        if not 'sender' in data and 'sender' in srv:
-            data['sender'] = srv['sender']
+        if not 'sender' in data:
+            if 'sender' in srv:
+                data['sender'] = srv['sender']
+            else:
+                data['sender'] = '%s@%s' % (getpass.getuser(), platform.node())
         if not 'addr' in data and 'addr' in srv:
             data['addr'] = srv['addr']
         sent = False
