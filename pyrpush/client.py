@@ -12,6 +12,7 @@ import logging
 default_timeout = 5
 default_ini_file = '/usr/local/etc/roboger_push.ini'
 
+
 class RobogerClient(object):
 
     def __init__(self, ini_file=None):
@@ -47,19 +48,19 @@ class RobogerClient(object):
 
         Returns:
             bool: True if at least one server accepted push, False otherwise
+
+        Raises:
+            FileNotFoundError: if the specified media file is unavailable
         """
         data = kwargs.copy()
         if 'keywords' in data and isinstance(data['keywords'], list):
             data['keywords'] = ','.join(data['keywords'])
         if media_file:
-            try:
-                if isinstance(media_file, str):
-                    f = open(media_file, 'rb')
-                else:
-                    f = media_file
-                data['media'] = base64.b64encode(f.read())
-            except:
-                raise
+            if isinstance(media_file, str):
+                f = open(media_file, 'rb')
+            else:
+                f = media_file
+            data['media'] = base64.b64encode(f.read())
         sent = False
         for i, srv in self.cdict.items():
             if srv.get('type') != 'backup':
@@ -129,4 +130,3 @@ class RobogerClient(object):
     def _log_error(self, msg, raise_exception=True):
         logging.error('RobogerClient: %s' % msg)
         if raise_exception: raise Exception(msg)
-
