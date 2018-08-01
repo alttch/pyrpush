@@ -1,7 +1,7 @@
 __author__ = "Altertech Group, https://www.altertech.com/"
 __copyright__ = "Copyright (C) 2018 Altertech Group"
 __license__ = "Apache License 2.0"
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 from configparser import ConfigParser
 import requests
@@ -125,7 +125,7 @@ class RobogerClient(object):
         logging.debug('RobogerClient: %s' % msg)
 
     def _log_warning(self, msg):
-        logging.debug('RobogerClient: %s' % msg)
+        logging.warning('RobogerClient: %s' % msg)
 
     def _log_error(self, msg, raise_exception=True):
         logging.error('RobogerClient: %s' % msg)
