@@ -1,7 +1,7 @@
 __author__ = "Altertech Group, https://www.altertech.com/"
 __copyright__ = "Copyright (C) 2018 Altertech Group"
 __license__ = "Apache License 2.0"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from configparser import ConfigParser
 import requests
@@ -97,7 +97,7 @@ class RobogerClient(object):
             elif 'sender' in srv:
                 data['sender'] = srv['sender']
             else:
-                data['sender'] = getpass.getuser()
+                data['sender'] = '%s@%s' % (getpass.getuser(), platform.node())
         if not 'location' in data:
             if self.location is not None:
                 data['location'] = self.location
