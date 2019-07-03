@@ -1,7 +1,7 @@
 __author__ = "Altertech Group, https://www.altertech.com/"
 __copyright__ = "Copyright (C) 2018 Altertech Group"
 __license__ = "Apache License 2.0"
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 from configparser import ConfigParser
 import requests
@@ -66,6 +66,11 @@ class RobogerClient(object):
             else:
                 f = media_file
             data['media'] = base64.b64encode(f.read())
+        try:
+            # we need text, but b64-encoded media can be bytes
+            data['media'] = data['media'].decode()
+        except:
+            pass
         sent = False
         for i, srv in self.cdict.items():
             if srv.get('type') != 'backup':
