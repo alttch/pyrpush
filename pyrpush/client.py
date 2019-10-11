@@ -46,7 +46,7 @@ class RobogerClient(object):
             location: event location, optional
             keywords: comma separated or list, optional
             level: debug, info, warning, error or critical (you can use first
-                   letter ony)
+                   letter only)
             media: base64-encoded media, optional
             media_file: get media from file, string or file descriptor, optional
 
