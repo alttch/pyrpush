@@ -44,7 +44,7 @@ class RobogerClient(object):
             subject: message subject, optional
             sender: if not specified, sender from config file will be used
             location: event location, optional
-            keywords: comma separated or list, optional
+            tag: event tag
             level: debug, info, warning, error or critical (you can use first
                    letter only)
             media: base64-encoded media, optional
@@ -58,8 +58,12 @@ class RobogerClient(object):
         """
         data = kwargs.copy()
         data['msg'] = msg
-        if 'keywords' in data and isinstance(data['keywords'], list):
-            data['keywords'] = ','.join(data['keywords'])
+        # TODO: remove legacy keywords
+        if 'keywords' in data:
+            if isinstance(data['keywords'], list):
+                data['keywords'] = ','.join(data['keywords'])
+            data['tag'] = data['keywords']
+            del data['keywords']
         if media_file:
             if isinstance(media_file, str):
                 f = open(media_file, 'rb')
