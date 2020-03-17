@@ -1,7 +1,7 @@
 __author__ = "Altertech Group, https://www.altertech.com/"
 __copyright__ = "Copyright (C) 2018 Altertech Group"
 __license__ = "Apache License 2.0"
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 from configparser import ConfigParser
 import requests
@@ -10,6 +10,8 @@ import time
 import logging
 import platform
 import getpass
+
+logger = logging.getLogger('roboger')
 
 default_timeout = 5
 default_ini_file = '/usr/local/etc/roboger_push.ini'
@@ -30,7 +32,7 @@ class RobogerClient(object):
         cp.read(inif)
         self.cdict = {s: dict(cp.items(s)) for s in cp.sections()}
         if not self.cdict:
-            self._log_error('unable to parse config file: %s' % inif)
+            raise RuntimeError('unable to parse config file: %s' % inif)
         self.sender = None
         self.location = None
 
@@ -123,7 +125,7 @@ class RobogerClient(object):
                 break
             time.sleep(retry_delay)
         if not sent:
-            self._log_warning('failed to send rpush to %s' % uri)
+            logger.warning('failed to send rpush to %s' % uri)
             backup = srv.get('backup')
             if backup in self.cdict:
                 return self._push_via(backup, **kwargs)
@@ -133,22 +135,12 @@ class RobogerClient(object):
     def _send_push(self, uri, timeout=None, **kwargs):
         _timeout = timeout if timeout else default_timeout
         try:
-            self._log_debug('sending push to %s' % uri)
+            logger.debug('sending push to %s %s' % (uri, kwargs))
             r = requests.post(uri + '/push', json=kwargs, timeout=_timeout)
             if r.status_code not in [200, 202]:
                 raise Exception('rpush error, code %u' % r.status_code)
         except:
-            self._log_debug('rpush to %s failed' % uri)
+            logger.debug('rpush to %s failed' % uri)
             return False
-        self._log_debug('success rpush to %s' % uri)
+        logger.debug('success rpush to %s' % uri)
         return True
-
-    def _log_debug(self, msg):
-        logging.debug('RobogerClient: %s' % msg)
-
-    def _log_warning(self, msg):
-        logging.warning('RobogerClient: %s' % msg)
-
-    def _log_error(self, msg, raise_exception=True):
-        logging.error('RobogerClient: %s' % msg)
-        if raise_exception: raise Exception(msg)
