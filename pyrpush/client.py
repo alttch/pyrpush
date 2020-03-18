@@ -72,6 +72,7 @@ class RobogerClient(object):
             else:
                 f = media_file
             data['media'] = base64.b64encode(f.read())
+            data['media_fname'] = media_file
         try:
             # we need text, but b64-encoded media can be bytes
             data['media'] = data['media'].decode()
